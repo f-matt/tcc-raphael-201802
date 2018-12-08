@@ -23,7 +23,7 @@ def gera_csv(filename):
             fields = fields[1].split("/")
             epoca = fields[0]
         elif line.startswith("20000/20000"):
-            fields = line.rstrip("\n").split("-")
+            fields = line.rstrip("\n").split(" - ")
 
             # Delta t
             dt = fields[1].strip().split(" ")[0][0:-1]
@@ -80,8 +80,8 @@ def plota_dt(filename_01,
 
     plt.legend(loc=7)
 
-    plt.show()
-    # plt.savefig(output_filename, dpi=1000)
+    # plt.show()
+    plt.savefig(output_filename, dpi=1000)
 
 
 def plota_acc(filename_01,
@@ -113,29 +113,48 @@ def plota_acc(filename_01,
 
     plt.legend(loc=0)
 
-    #plt.show()
+    # plt.show()
     plt.savefig(output_filename, dpi=1000)
+
+
+def get_maior_acc(filename):
+
+    (_, train_acc_list) = extrai_campo(filename, 2)
+    (_, test_acc_list) = extrai_campo(filename, 3)
+
+    maior_train_acc = 0
+    maior_test_acc = 0
+
+    for i in range(len(test_acc_list)):
+        if test_acc_list[i] > maior_test_acc:
+            maior_test_acc = test_acc_list[i]
+            maior_train_acc = train_acc_list[i]
+
+    print ("Maior train acc: {} | Maior test acc: {}".format(maior_train_acc, maior_test_acc))
+
 
 if __name__ == "__main__":
 
-    # gera_csv("arquivos/mnist-cifar10-colab-gpu.txt")
+    # gera_csv("arquivos/mnist-lenet-desktop-gpu.txt")
 
-    plota_dt("arquivos/mnist-cifar10-colab-cpu.csv",
-        "arquivos/mnist-cifar10-colab-gpu.csv",
-        "CPU",
-        "GPU",
-        "Dataset: MNIST - Rede: Cifar-10 - Colaboratory",
-        "img/mnist-cifar10-colab.png")
+    # plota_dt("arquivos/mnist-lenet-colab-cpu.csv",
+    #     "arquivos/mnist-lenet-colab-gpu.csv",
+    #     "CPU",
+    #     "GPU",
+    #     "Dataset: MNIST - Rede: LENET - Colaboratory",
+    #     "img/mnist-lenet-colab.png")
 
-    # plota_acc("arquivos/cifar10-cifar10-desktop-cpu.csv",
-    #     "arquivos/cifar10-cifar10-desktop-gpu.csv",
-    #     "arquivos/cifar10-cifar10-colab-cpu.csv",
-    #     "arquivos/cifar10-cifar10-colab-gpu.csv",
+    # plota_acc("arquivos/mnist-lenet-desktop-cpu.csv",
+    #     "arquivos/mnist-lenet-desktop-gpu.csv",
+    #     "arquivos/mnist-lenet-colab-cpu.csv",
+    #     "arquivos/mnist-lenet-colab-gpu.csv",
     #     "CPU - Desktop",
     #     "GPU - Desktop",
     #     "CPU - Colaboratory",
     #     "GPU - Colaboratory",
-    #     "Dataset: Cifar-10 - Rede: Cifar-10",
-    #     "img/acc-cifar10-cifar10.png")
+    #     "Dataset: MNIST - Rede: LENET",
+    #     "img/acc-mnist-lenet.png")
+
+    get_maior_acc("arquivos/cifar10-cifar10-desktop-cpu.csv")
 
     print ("Feito.")
